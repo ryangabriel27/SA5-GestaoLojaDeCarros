@@ -34,6 +34,7 @@ public class CarrosPanel extends JPanel {
     // Construtor
     public CarrosPanel() {
         super();
+
         // Entrada de dados
         // Botões de eventos (Adicionar, Modificar, Excluir, ...)
         // Tabela de carros
@@ -55,6 +56,7 @@ public class CarrosPanel extends JPanel {
         tableModel.addColumn("Ano"); // Adiciona uma coluna 'Ano'
         tableModel.addColumn("Cor"); // Adiciona uma coluna 'Cor'
         tableModel.addColumn("Valor");
+        atualizarTabela();
 
         table = new JTable(tableModel);// Cria a tabela model da 'tableModel'
         scrollPane = new JScrollPane(table);// Adiciona a table a um JScrollPane
@@ -108,12 +110,20 @@ public class CarrosPanel extends JPanel {
         voltarCadastro.addActionListener(e -> {
             cl.show(cards, "Home");
         });
-        
+
         CarrosControl controller = new CarrosControl(carros, tableModel, table);
         confirmaCadastro.addActionListener(e -> {
-            controller.cadastrarCarro(inputModelo.getText(), inputMarca.getText(), Integer.parseInt(inputAno.getText()),
-                    inputCor.getText(), inputPlaca.getText(), Double.parseDouble(inputValor.getText()));
+            controller.cadastrarCarro(inputModelo.getText(), inputMarca.getText(), inputAno.getText(),
+                    inputCor.getText(), inputPlaca.getText(), inputValor.getText());
         });
 
+    }
+
+    public void atualizarTabela() {
+        tableModel.setRowCount(0);
+        for (Carros carro : carros) {
+            tableModel.addRow(new Object[] { carro.getPlaca(), carro.getMarca(), carro.getModelo(), carro.getAno(),
+                    carro.getCor(), carro.getValor() });
+        }
     }
 }
