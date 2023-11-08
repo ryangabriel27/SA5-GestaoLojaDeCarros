@@ -23,31 +23,12 @@ public class CarrosControl {
         this.tableModel = tableModel;
         this.table = table;
     }
-
+    // -------------------*
     // Métodos
-    public void cadastrarCarro(String modelo, String marca, String ano, String cor, String placa, String valor) {
-        // Adiciona a tabela
-        Carros carro = new Carros(modelo.trim().toUpperCase(), marca.trim().toUpperCase(), ano.trim(),
-                cor.trim().toUpperCase(), placa.trim().toUpperCase(), "R$ " + valor.trim());
-        carros.add(carro);
-        // -----------------------*
-        // Adicionar ao banco de dados
-
-        // -----------------------*
-        atualizarTabela();// Atualiza a tabela
-        // Atualiza o banco de dados
-    }
-
-    public void apagarCarro(int linhaSelecionada) {
-        if (linhaSelecionada != -1) {
-            carros.remove(linhaSelecionada);
-            atualizarTabela();
-        }
-    }
 
     public void atualizarTabela() {
         tableModel.setRowCount(0); // Limpa todas as linhas existentes na tabela
-        // carros = new CarrosDAO().listarTodos();
+        carros = new CarrosDAO().listarTodos();
         // Obtém os carros atualizados do banco de dados
         for (Carros carro : carros) {
             // Adiciona os dados de cada carro como uma nova linha na tabela Swing
@@ -57,8 +38,30 @@ public class CarrosControl {
 
     }
 
-    public void atualizar(String modelo, String marca, String ano, String cor, String placa, String valor) {
-        // new CarrosDAO().atualizar(marca, modelo, ano, placa, valor);
+    public void cadastrarCarro(String modelo, String marca, String ano, String cor, String placa, double valor) {
+        // Adiciona a tabela
+        Carros carro = new Carros(modelo.trim().toUpperCase(), marca.trim().toUpperCase(), ano.trim(),
+                cor.trim().toUpperCase(), placa.trim().toUpperCase(), valor);
+        carros.add(carro);
+        // -----------------------*
+        // Adicionar ao banco de dados
+        new CarrosDAO().cadastrar(marca, modelo, ano, cor, placa, valor);
+        // -----------------------*
+        atualizarTabela();// Atualiza a tabela
+        JOptionPane.showMessageDialog(null,"Carro cadastrado com sucesso!");
+        // Atualiza o banco de dados
+    }
+
+    // Método para apagar um carro do banco de dados
+    public void apagar(String placa) {
+        new CarrosDAO().apagar(placa);
+        // Chama o método de exclusão no banco de dados
+        atualizarTabela(); // Atualiza a tabela de exibição após a exclusão
+        JOptionPane.showMessageDialog(table, "Carro removido!!!");
+    }
+
+    public void atualizar(String modelo, String marca, String ano, String cor, String placa, double valor) {
+        new CarrosDAO().atualizar(marca, modelo, ano, cor, placa, valor);
         // Chama o método de atualização no banco de dados
         atualizarTabela(); // Atualiza a tabela de exibição após a atualização
     }

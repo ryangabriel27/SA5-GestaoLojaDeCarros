@@ -8,10 +8,10 @@ public class Carros {
     public String ano;
     public String cor;
     public String placa;
-    public String valor;
+    public double valor;
 
     // Construtor
-    public Carros(String modelo, String marca, String ano, String cor, String placa, String valor) {
+    public Carros(String modelo, String marca, String ano, String cor, String placa, double valor) {
         this.modelo = modelo;
         this.marca = marca;
         this.ano = ano;
@@ -61,11 +61,11 @@ public class Carros {
         this.placa = placa;
     }
 
-    public String getValor() {
+    public double getValor() {
         return valor;
     }
 
-    public void setValor(String valor) {
+    public void setValor(double valor) {
         this.valor = valor;
     }
 

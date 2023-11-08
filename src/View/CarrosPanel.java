@@ -5,15 +5,15 @@ import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 
-import org.w3c.dom.events.MouseEvent;
-
 import Control.CarrosControl;
+import Control.CarrosDAO;
 
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
@@ -21,7 +21,10 @@ import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
 import java.awt.event.MouseAdapter;
+import java.awt.event.WindowEvent;
 
 import Model.Carros;
 
@@ -106,6 +109,11 @@ public class CarrosPanel extends JPanel {
         inputPanel.add(confirmaCadastro);
         panelCadastro.add(inputPanel);
 
+        // Cria o banco de dados caso não tenha sido criado
+        new CarrosDAO().criaTabela();
+        // incluindo elementos do banco na criação do painel
+        atualizarTabela();
+
         // Tratamento de Eventos
 
         cadastraCarro.addActionListener(e -> {
@@ -118,15 +126,27 @@ public class CarrosPanel extends JPanel {
 
         CarrosControl controllerCarros = new CarrosControl(carros, tableModel, table);
         confirmaCadastro.addActionListener(e -> {
-            controllerCarros.cadastrarCarro(inputModelo.getText(), inputMarca.getText(), inputAno.getText(),
-                    inputCor.getText(), inputPlaca.getText(), inputValor.getText());
-            // Limpa os campos de entrada após a operação de cadastro
-            inputMarca.setText("");
-            inputAno.setText("");
-            inputModelo.setText("");
-            inputPlaca.setText("");
-            inputValor.setText("");
-            inputCor.setText("");
+
+            if (!inputMarca.getText().isEmpty() && !inputModelo.getText().isEmpty() && !inputPlaca.getText().isEmpty()
+                    && !inputAno.getText().isEmpty() && !inputCor.getText().isEmpty()
+                    && !inputValor.getText().isEmpty()) {
+
+                controllerCarros.cadastrarCarro(inputModelo.getText(), inputMarca.getText(), inputAno.getText(),
+                        inputCor.getText(), inputPlaca.getText(), Double.parseDouble(inputValor.getText()));
+
+                
+                // Limpa os campos de entrada após a operação de cadastro
+                inputMarca.setText("");
+                inputAno.setText("");
+                inputModelo.setText("");
+                inputPlaca.setText("");
+                inputValor.setText("");
+                inputCor.setText("");
+
+            } else {
+                JOptionPane.showMessageDialog(inputPanel, "Preencha os campos corretamente para cadastrar um carro!!");
+            }
+
         });
 
         table.addMouseListener(new MouseAdapter() {
@@ -158,8 +178,27 @@ public class CarrosPanel extends JPanel {
                         (String) table.getValueAt(linhaSelecionada, 2),
                         (String) table.getValueAt(linhaSelecionada, 3),
                         (String) table.getValueAt(linhaSelecionada, 4),
-                        (String) table.getValueAt(linhaSelecionada, 5));
+                        (double) table.getValueAt(linhaSelecionada, 5));
                 // Limpa os campos de entrada após a operação de atualização
+            }
+        });
+
+        // Configura a ação do botão "apagar" para excluir um registro no banco de dados
+        apagaCarro.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Chama o método "apagar" do objeto operacoes com o valor do campo de
+
+                // entrada "placa"
+
+                controllerCarros.apagar(inputPlaca.getText());
+                // Limpa os campos de entrada após a operação de exclusão
+                inputMarca.setText("");
+                inputAno.setText("");
+                inputModelo.setText("");
+                inputPlaca.setText("");
+                inputValor.setText("");
+                inputCor.setText("");
             }
         });
 

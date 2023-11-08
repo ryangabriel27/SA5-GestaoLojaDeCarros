@@ -1,9 +1,14 @@
 package View;
 
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+
 import javax.swing.JFrame;
 import javax.swing.JTabbedPane;
 
-public class MainFrame extends JFrame{
+import Model.Carros;
+
+public class MainFrame extends JFrame {
 
     public MainFrame() {
         super("Loja de Carros");
@@ -13,7 +18,7 @@ public class MainFrame extends JFrame{
         add(abas);
     }
 
-    public void run(){
+    public void run() {
         pack();
         setVisible(true);
     }
