@@ -11,12 +11,17 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 
+import org.w3c.dom.events.MouseEvent;
+
 import Control.CarrosControl;
 
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
 
 import Model.Carros;
 
@@ -111,10 +116,51 @@ public class CarrosPanel extends JPanel {
             cl.show(cards, "Home");
         });
 
-        CarrosControl controller = new CarrosControl(carros, tableModel, table);
+        CarrosControl controllerCarros = new CarrosControl(carros, tableModel, table);
         confirmaCadastro.addActionListener(e -> {
-            controller.cadastrarCarro(inputModelo.getText(), inputMarca.getText(), inputAno.getText(),
+            controllerCarros.cadastrarCarro(inputModelo.getText(), inputMarca.getText(), inputAno.getText(),
                     inputCor.getText(), inputPlaca.getText(), inputValor.getText());
+            // Limpa os campos de entrada após a operação de cadastro
+            inputMarca.setText("");
+            inputAno.setText("");
+            inputModelo.setText("");
+            inputPlaca.setText("");
+            inputValor.setText("");
+            inputCor.setText("");
+        });
+
+        table.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                linhaSelecionada = table.rowAtPoint(evt.getPoint());
+                if (linhaSelecionada != -1) {
+                    inputMarca.setText((String) table.getValueAt(linhaSelecionada, 1));
+                    inputModelo.setText((String) table.getValueAt(linhaSelecionada, 2));
+                    inputAno.setText((String) table.getValueAt(linhaSelecionada, 3));
+                    inputPlaca.setText((String) table.getValueAt(linhaSelecionada, 0));
+                    inputValor.setText((String) table.getValueAt(linhaSelecionada, 5));
+                    inputCor.setText((String) table.getValueAt(linhaSelecionada, 4));
+                }
+            }
+        });
+
+        // Configura a ação do botão "editar" para atualizar um registro no banco de
+        // dados
+        editaCarro.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Chama o método "atualizar" do objeto operacoes com os valores dos
+
+                // campos de entrada
+
+                controllerCarros.atualizar((String) table.getValueAt(linhaSelecionada, 0),
+                        (String) table.getValueAt(linhaSelecionada, 1),
+                        (String) table.getValueAt(linhaSelecionada, 2),
+                        (String) table.getValueAt(linhaSelecionada, 3),
+                        (String) table.getValueAt(linhaSelecionada, 4),
+                        (String) table.getValueAt(linhaSelecionada, 5));
+                // Limpa os campos de entrada após a operação de atualização
+            }
         });
 
     }

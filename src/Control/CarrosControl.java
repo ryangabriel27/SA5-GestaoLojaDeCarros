@@ -32,9 +32,7 @@ public class CarrosControl {
         carros.add(carro);
         // -----------------------*
         // Adicionar ao banco de dados
-        // new
-        // CarrosDAO(ConnectionFactory.getConnection()).adicionarCarro(modelo.trim(),
-        // marca.trim(), ano, cor.trim(), placa.trim(), valor);
+
         // -----------------------*
         atualizarTabela();// Atualiza a tabela
         // Atualiza o banco de dados
@@ -47,29 +45,22 @@ public class CarrosControl {
         }
     }
 
-    public void atualizaCarro(int linhaSelecionada, String modelo, String marca, String ano, String cor, String placa,
-            String valor) {
-        if (linhaSelecionada != -1) {
-            Carros carro = new Carros(modelo.trim().toUpperCase(), marca.trim().toUpperCase(), ano.trim(),
-                    cor.trim().toUpperCase(), placa.trim().toUpperCase(), "R$ " + valor.trim());
-            carros.add(carro);
-            atualizarTabela();
-        }
-    }
-
     public void atualizarTabela() {
-        tableModel.setRowCount(0);
-        // carros = new CarrosDAO().read();
-        Object linha[] = new Object[6];
-        for (int i = 0; i < carros.size(); i++) {
-            linha[0] = carros.get(i).placa;
-            linha[1] = carros.get(i).marca;
-            linha[2] = carros.get(i).modelo;
-            linha[3] = carros.get(i).ano;
-            linha[4] = carros.get(i).cor;
-            linha[5] = carros.get(i).valor;
-            tableModel.addRow(linha);
+        tableModel.setRowCount(0); // Limpa todas as linhas existentes na tabela
+        // carros = new CarrosDAO().listarTodos();
+        // Obtém os carros atualizados do banco de dados
+        for (Carros carro : carros) {
+            // Adiciona os dados de cada carro como uma nova linha na tabela Swing
+            tableModel.addRow(new Object[] { carro.getPlaca(), carro.getMarca(),
+                    carro.getModelo(), carro.getAno(), carro.getCor(), carro.getValor() });
         }
 
     }
+
+    public void atualizar(String modelo, String marca, String ano, String cor, String placa, String valor) {
+        // new CarrosDAO().atualizar(marca, modelo, ano, placa, valor);
+        // Chama o método de atualização no banco de dados
+        atualizarTabela(); // Atualiza a tabela de exibição após a atualização
+    }
+
 }
