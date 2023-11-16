@@ -3,6 +3,7 @@ package View;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -11,6 +12,8 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
+
+import org.w3c.dom.events.MouseEvent;
 
 import Control.CarrosControl;
 import Control.CarrosDAO;
@@ -30,46 +33,22 @@ import Model.Carros;
 
 public class CarrosPanel extends JPanel {
     // Componentes
-    private JPanel cards, buttonPanel, panelPrincipal, panelCadastro;
-    private JButton cadastraCarro, editaCarro, apagaCarro, confirmaCadastro, voltarCadastro;
+    private JPanel buttonPanel;
+    private JButton cadastraCarro, editaCarro, apagaCarro;
     private JTextField inputPlaca, inputMarca, inputModelo, inputAno, inputCor, inputValor;
     private DefaultTableModel tableModel;
     private JTable table;
     private List<Carros> carros = new ArrayList<>();
     private int linhaSelecionada = -1;
-    private JScrollPane scrollPane;
+    private JScrollPane jSPane;
 
     // Construtor
     public CarrosPanel() {
         super();
 
-        // Entrada de dados
-        // Botões de eventos (Adicionar, Modificar, Excluir, ...)
-        // Tabela de carros
-        // panel = new JPanel();
-        // this.add(panel);
-        CardLayout cl = new CardLayout();
-        cards = new JPanel();
-        this.add(cards);
-        cards.setLayout(cl); // Definindo o layout do painel com cardLayout
-        // panel.add(cards);
+        setLayout(new BoxLayout(this, BoxLayout.Y_AXIS)); // Definindo layout do CarrosPanel
 
-        panelPrincipal = new JPanel(new BorderLayout());
-        cards.add(panelPrincipal, "Home"); // Adicionando a telaPrincipal ao painel de cards
-
-        tableModel = new DefaultTableModel(); // Criando o modelo de tabela
-        tableModel.addColumn("Placa"); // Adiciona uma coluna 'Placa'
-        tableModel.addColumn("Marca"); // Adiciona uma coluna 'Marca'
-        tableModel.addColumn("Modelo"); // Adiciona uma coluna 'Modelo'
-        tableModel.addColumn("Ano"); // Adiciona uma coluna 'Ano'
-        tableModel.addColumn("Cor"); // Adiciona uma coluna 'Cor'
-        tableModel.addColumn("Valor");
-        atualizarTabela();
-
-        table = new JTable(tableModel);// Cria a tabela model da 'tableModel'
-        scrollPane = new JScrollPane(table);// Adiciona a table a um JScrollPane
-        panelPrincipal.add(scrollPane, BorderLayout.CENTER); // Adicionando a tabela a tela principal
-
+        // --------------------------*
         // Componentes
         cadastraCarro = new JButton("Cadastrar");
         apagaCarro = new JButton("Excluir");
@@ -80,19 +59,10 @@ public class CarrosPanel extends JPanel {
         inputMarca = new JTextField(12);
         inputModelo = new JTextField(20);
         inputValor = new JTextField(12);
-        voltarCadastro = new JButton("Retornar");
-        confirmaCadastro = new JButton("Cadastrar");
 
-        // Adicionar os componentes
-        buttonPanel = new JPanel(new FlowLayout(1)); // Painel de botões
-        buttonPanel.add(cadastraCarro);
-        buttonPanel.add(editaCarro);
-        buttonPanel.add(apagaCarro);
-        panelPrincipal.add(buttonPanel, BorderLayout.NORTH);// Adicionando o painel De botões a Tela Principal
-
-        panelCadastro = new JPanel(new FlowLayout(1));
-        cards.add(panelCadastro, "Cadastro Carros");
-        JPanel inputPanel = new JPanel(new GridLayout(7, 2, 2, 4));
+        // --------------------------*
+        // Adicionar os componentes:
+        JPanel inputPanel = new JPanel(new GridLayout(6, 2, 2, 4)); // InputPanel
         inputPanel.add(new JLabel("Digite a placa do carro:"));
         inputPanel.add(inputPlaca);
         inputPanel.add(new JLabel("Digite a marca do carro:"));
@@ -105,110 +75,129 @@ public class CarrosPanel extends JPanel {
         inputPanel.add(inputCor);
         inputPanel.add(new JLabel("Digite o valor do carro:"));
         inputPanel.add(inputValor);
-        inputPanel.add(voltarCadastro);
-        inputPanel.add(confirmaCadastro);
-        panelCadastro.add(inputPanel);
+        add(inputPanel);
 
+        // --------------------------*
+        buttonPanel = new JPanel(); // Painel de botões
+        buttonPanel.add(cadastraCarro);
+        buttonPanel.add(editaCarro);
+        buttonPanel.add(apagaCarro);
+        add(buttonPanel);// Adicionando o painel De botões a Tela Principal
+
+        // --------------------------*
+        jSPane = new JScrollPane(); // Criando um scrollPane
+        add(jSPane);
+        tableModel = new DefaultTableModel(new Object[][] {},
+                new String[] { "Placa", "Marca", "Modelo", "Ano", "Cor", "Valor" });
+        table = new JTable(tableModel);
+        jSPane.setViewportView(table);
         // Cria o banco de dados caso não tenha sido criado
         new CarrosDAO().criaTabela();
         // incluindo elementos do banco na criação do painel
         atualizarTabela();
 
-        // Tratamento de Eventos
+        // --------------------------*
+        // Tratamento de eventos
+        table.addMouseListener(new MouseAdapter() {
 
+            @Override
+            public void mouseClicked(java.awt.event.MouseEvent e) {
+
+                linhaSelecionada = table.rowAtPoint(e.getPoint());
+                if (linhaSelecionada != -1) {
+                    inputPlaca.setText((String) table.getValueAt(linhaSelecionada, 0));
+                    inputMarca.setText((String) table.getValueAt(linhaSelecionada, 1));
+                    inputModelo.setText((String) table.getValueAt(linhaSelecionada, 2));
+                    inputAno.setText((String) table.getValueAt(linhaSelecionada, 3));
+                    inputCor.setText((String) table.getValueAt(linhaSelecionada, 4));
+                    inputValor.setText(String.valueOf(table.getValueAt(linhaSelecionada, 5)));
+                }
+
+            }
+
+        });
+
+        // --------------------------*
+        CarrosControl controllerCarros = new CarrosControl(carros, tableModel, table); // Objeto da classe carrosControl
+
+        // Cadastrar um carro:
         cadastraCarro.addActionListener(e -> {
-            cl.show(cards, "Cadastro Carros");
-        });
-
-        voltarCadastro.addActionListener(e -> {
-            cl.show(cards, "Home");
-        });
-
-        CarrosControl controllerCarros = new CarrosControl(carros, tableModel, table);
-        confirmaCadastro.addActionListener(e -> {
+            boolean isAnoNumeric;
+            isAnoNumeric = inputAno.getText().chars().allMatch(Character::isDigit);
 
             if (!inputMarca.getText().isEmpty() && !inputModelo.getText().isEmpty() && !inputPlaca.getText().isEmpty()
                     && !inputAno.getText().isEmpty() && !inputCor.getText().isEmpty()
                     && !inputValor.getText().isEmpty()) {
 
-                controllerCarros.cadastrarCarro(inputModelo.getText(), inputMarca.getText(), inputAno.getText(),
-                        inputCor.getText(), inputPlaca.getText(), Double.parseDouble(inputValor.getText()));
+                if (isAnoNumeric == false) {
+                    JOptionPane.showMessageDialog(null, "Digite o ano corretamente", "Erro",
+                            JOptionPane.WARNING_MESSAGE);
+                } else {
+                    controllerCarros.cadastrarCarro(inputModelo.getText(), inputMarca.getText(), inputAno.getText(),
+                            inputCor.getText(), inputPlaca.getText(), Double.parseDouble(inputValor.getText()));
 
-                
-                // Limpa os campos de entrada após a operação de cadastro
-                inputMarca.setText("");
-                inputAno.setText("");
-                inputModelo.setText("");
-                inputPlaca.setText("");
-                inputValor.setText("");
-                inputCor.setText("");
+                    // Limpa os campos de entrada após a operação de cadastro
+                    inputMarca.setText("");
+                    inputAno.setText("");
+                    inputModelo.setText("");
+                    inputPlaca.setText("");
+                    inputValor.setText("");
+                    inputCor.setText("");
+                }
 
             } else {
                 JOptionPane.showMessageDialog(inputPanel, "Preencha os campos corretamente para cadastrar um carro!!");
             }
 
         });
+        // --------------------------*
 
-        table.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                linhaSelecionada = table.rowAtPoint(evt.getPoint());
-                if (linhaSelecionada != -1) {
-                    inputMarca.setText((String) table.getValueAt(linhaSelecionada, 1));
-                    inputModelo.setText((String) table.getValueAt(linhaSelecionada, 2));
-                    inputAno.setText((String) table.getValueAt(linhaSelecionada, 3));
-                    inputPlaca.setText((String) table.getValueAt(linhaSelecionada, 0));
-                    inputValor.setText((String) table.getValueAt(linhaSelecionada, 5));
-                    inputCor.setText((String) table.getValueAt(linhaSelecionada, 4));
-                }
-            }
-        });
-
-        // Configura a ação do botão "editar" para atualizar um registro no banco de
-        // dados
+        // Editar um carro:
         editaCarro.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 // Chama o método "atualizar" do objeto operacoes com os valores dos
-
                 // campos de entrada
-
-                controllerCarros.atualizar((String) table.getValueAt(linhaSelecionada, 0),
-                        (String) table.getValueAt(linhaSelecionada, 1),
-                        (String) table.getValueAt(linhaSelecionada, 2),
-                        (String) table.getValueAt(linhaSelecionada, 3),
-                        (String) table.getValueAt(linhaSelecionada, 4),
-                        (double) table.getValueAt(linhaSelecionada, 5));
+                controllerCarros.atualizar(inputModelo.getText(), inputMarca.getText(), inputAno.getText(),
+                        inputCor.getText(), inputPlaca.getText(), Double.parseDouble(inputValor.getText()));
                 // Limpa os campos de entrada após a operação de atualização
             }
         });
+        // --------------------------*
 
-        // Configura a ação do botão "apagar" para excluir um registro no banco de dados
+        // Apagar um carro:
         apagaCarro.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // Chama o método "apagar" do objeto operacoes com o valor do campo de
+                // Chama o método "apagar" do objeto operacoes com o valor do campo de entrada
+                // "placa"
+                if (linhaSelecionada != -1) {
+                    controllerCarros.apagar(inputPlaca.getText());
+                    // Limpa os campos de entrada após a operação de exclusão
+                    inputMarca.setText("");
+                    inputAno.setText("");
+                    inputModelo.setText("");
+                    inputPlaca.setText("");
+                    inputValor.setText("");
+                    inputCor.setText("");
+                } else {
+                    JOptionPane.showMessageDialog(null, "Selecione um carro para ser excluído");
+                }
 
-                // entrada "placa"
-
-                controllerCarros.apagar(inputPlaca.getText());
-                // Limpa os campos de entrada após a operação de exclusão
-                inputMarca.setText("");
-                inputAno.setText("");
-                inputModelo.setText("");
-                inputPlaca.setText("");
-                inputValor.setText("");
-                inputCor.setText("");
             }
         });
 
     }
 
     public void atualizarTabela() {
-        tableModel.setRowCount(0);
+        tableModel.setRowCount(0); // Limpa todas as linhas existentes na tabela
+        carros = new CarrosDAO().listarTodos();
+        // Obtém os carros atualizados do banco de dados
         for (Carros carro : carros) {
-            tableModel.addRow(new Object[] { carro.getPlaca(), carro.getMarca(), carro.getModelo(), carro.getAno(),
-                    carro.getCor(), carro.getValor() });
+            // Adiciona os dados de cada carro como uma nova linha na tabela Swing
+            tableModel.addRow(new Object[] { carro.getPlaca(), carro.getMarca(),
+                    carro.getModelo(), carro.getAno(), carro.getCor(), carro.getValor() });
         }
+
     }
 }

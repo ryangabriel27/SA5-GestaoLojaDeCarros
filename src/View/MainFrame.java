@@ -15,6 +15,7 @@ public class MainFrame extends JFrame {
         setDefaultCloseOperation(2);
         JTabbedPane abas = new JTabbedPane();
         abas.add("Carros", new CarrosPanel());
+        abas.add("Clientes", new ClientesPanel());
         add(abas);
     }
 

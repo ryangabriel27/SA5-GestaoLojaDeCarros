@@ -1,5 +1,6 @@
 package Control;
 
+import java.awt.JobAttributes;
 import java.sql.Connection;
 import java.util.List;
 
@@ -48,7 +49,7 @@ public class CarrosControl {
         new CarrosDAO().cadastrar(marca, modelo, ano, cor, placa, valor);
         // -----------------------*
         atualizarTabela();// Atualiza a tabela
-        JOptionPane.showMessageDialog(null,"Carro cadastrado com sucesso!");
+        JOptionPane.showMessageDialog(null, "Carro cadastrado com sucesso!");
         // Atualiza o banco de dados
     }
 
@@ -65,5 +66,4 @@ public class CarrosControl {
         // Chama o método de atualização no banco de dados
         atualizarTabela(); // Atualiza a tabela de exibição após a atualização
     }
-
 }
