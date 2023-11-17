@@ -66,4 +66,14 @@ public class CarrosControl {
         // Chama o método de atualização no banco de dados
         atualizarTabela(); // Atualiza a tabela de exibição após a atualização
     }
+
+    public boolean placaJaCadastrada(String placa) {
+        for (Carros carro : carros) {
+            if (carro.getPlaca().equalsIgnoreCase(placa)) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
 }

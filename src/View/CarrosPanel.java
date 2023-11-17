@@ -41,6 +41,8 @@ public class CarrosPanel extends JPanel {
     private List<Carros> carros = new ArrayList<>();
     private int linhaSelecionada = -1;
     private JScrollPane jSPane;
+    private boolean isAnoNumeric;
+    private boolean isValorNumeric;
 
     // Construtor
     public CarrosPanel() {
@@ -116,33 +118,44 @@ public class CarrosPanel extends JPanel {
             }
 
         });
-
         // --------------------------*
         CarrosControl controllerCarros = new CarrosControl(carros, tableModel, table); // Objeto da classe carrosControl
 
         // Cadastrar um carro:
         cadastraCarro.addActionListener(e -> {
-            boolean isAnoNumeric;
-            isAnoNumeric = inputAno.getText().chars().allMatch(Character::isDigit);
 
+            isAnoNumeric = inputAno.getText().chars().allMatch(Character::isDigit); // Verifica se o há somente números
+                                                                                    // no inputAno
+            isValorNumeric = inputValor.getText().chars().allMatch(Character::isDigit); // Verifica se o há somente
+                                                                                        // números no inputValor
             if (!inputMarca.getText().isEmpty() && !inputModelo.getText().isEmpty() && !inputPlaca.getText().isEmpty()
                     && !inputAno.getText().isEmpty() && !inputCor.getText().isEmpty()
                     && !inputValor.getText().isEmpty()) {
 
-                if (isAnoNumeric == false) {
-                    JOptionPane.showMessageDialog(null, "Digite o ano corretamente", "Erro",
+                if (!isAnoNumeric) {
+                    JOptionPane.showMessageDialog(null, "Digite o ano corretamente (Apenas números)", "Erro",
+                            JOptionPane.WARNING_MESSAGE);
+                } else if (!isValorNumeric) {
+                    JOptionPane.showMessageDialog(null, "Digite o valor corretamente (Apenas números)", "Erro",
                             JOptionPane.WARNING_MESSAGE);
                 } else {
-                    controllerCarros.cadastrarCarro(inputModelo.getText(), inputMarca.getText(), inputAno.getText(),
-                            inputCor.getText(), inputPlaca.getText(), Double.parseDouble(inputValor.getText()));
+                    if (controllerCarros.placaJaCadastrada(inputPlaca.getText())) {
+                        JOptionPane.showMessageDialog(null,
+                                "Placa já cadastrada. Por favor, insira uma placa diferente.", "Erro",
+                                JOptionPane.WARNING_MESSAGE);
+                    } else {
+                        // Se a placa não estiver cadastrada, realiza o cadastro
+                        controllerCarros.cadastrarCarro(inputModelo.getText(), inputMarca.getText(), inputAno.getText(),
+                                inputCor.getText(), inputPlaca.getText(), Double.parseDouble(inputValor.getText()));
 
-                    // Limpa os campos de entrada após a operação de cadastro
-                    inputMarca.setText("");
-                    inputAno.setText("");
-                    inputModelo.setText("");
-                    inputPlaca.setText("");
-                    inputValor.setText("");
-                    inputCor.setText("");
+                        // Limpa os campos de entrada após a operação de cadastro
+                        inputMarca.setText("");
+                        inputAno.setText("");
+                        inputModelo.setText("");
+                        inputPlaca.setText("");
+                        inputValor.setText("");
+                        inputCor.setText("");
+                    }
                 }
 
             } else {
@@ -156,11 +169,29 @@ public class CarrosPanel extends JPanel {
         editaCarro.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // Chama o método "atualizar" do objeto operacoes com os valores dos
-                // campos de entrada
-                controllerCarros.atualizar(inputModelo.getText(), inputMarca.getText(), inputAno.getText(),
-                        inputCor.getText(), inputPlaca.getText(), Double.parseDouble(inputValor.getText()));
-                // Limpa os campos de entrada após a operação de atualização
+                isAnoNumeric = inputAno.getText().chars().allMatch(Character::isDigit); // Verifica se o há somente
+                                                                                        // números no inputAno
+                isValorNumeric = inputValor.getText().chars().allMatch(Character::isDigit); // Verifica se o há somente
+                                                                                            // números no inputValor
+                if (!isAnoNumeric) {
+                    JOptionPane.showMessageDialog(null, "Digite o ano corretamente (Apenas números)", "Erro",
+                            JOptionPane.WARNING_MESSAGE);
+                } else if (!isValorNumeric) {
+                    JOptionPane.showMessageDialog(null, "Digite o valor corretamente (Apenas números)", "Erro",
+                            JOptionPane.WARNING_MESSAGE);
+                } else {
+                    if (controllerCarros.placaJaCadastrada(inputPlaca.getText())) { // Verifica se a placa digitada já está cadastrada
+                        JOptionPane.showMessageDialog(null,
+                                "Placa já cadastrada. Por favor, insira uma placa diferente.", "Erro",
+                                JOptionPane.WARNING_MESSAGE);
+                    } else {
+                        // Chama o método "atualizar" do objeto operacoes com os valores dos campos de entrada
+                        controllerCarros.atualizar(inputModelo.getText(), inputMarca.getText(), inputAno.getText(),
+                                inputCor.getText(), inputPlaca.getText(), Double.parseDouble(inputValor.getText()));
+                        // Limpa os campos de entrada após a operação de atualização
+                    }
+                }
+
             }
         });
         // --------------------------*

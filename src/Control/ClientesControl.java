@@ -26,9 +26,9 @@ public class ClientesControl {
     public void atualizarTabela() {
         tableModel.setRowCount(0); // Limpa todas as linhas existentes na tabela
         clientes = new ClientesDAO().listarTodos();
-        // Obtém os carros atualizados do banco de dados
+        // Obtém os clientes atualizados do banco de dados
         for (Clientes cliente : clientes) {
-            // Adiciona os dados de cada carro como uma nova linha na tabela Swing
+            // Adiciona os dados de cada cliente como uma nova linha na tabela Swing
             tableModel.addRow(new Object[] { cliente.getCpf(), cliente.getNomeCompleto(), cliente.getDataNascimento(),
                     cliente.getIdade() });
         }
