@@ -37,22 +37,22 @@ public class MainFrame extends JFrame {
         // ---------------------*
         menu = new JPanel(new BorderLayout());
 
-        try {
-            img = ImageIO.read(new File("menu.jpg"));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        JLabel label = new JLabel();
-        label.setText("teste");
-        label.setForeground(Color.white);
-        label.setHorizontalTextPosition(JLabel.CENTER);
+        // try {
+        //     img = ImageIO.read(new File("menu.jpg"));
+        // } catch (IOException e) {
+        //     e.printStackTrace();
+        // }
+        // JLabel label = new JLabel();
+        // label.setText("teste");
+        // label.setForeground(Color.white);
+        // label.setHorizontalTextPosition(JLabel.CENTER);
 
-        Image dimg = img.getScaledInstance(this.getWidth(), this.getHeight(), Image.SCALE_SMOOTH);
+        // Image dimg = img.getScaledInstance(this.getWidth(), this.getHeight(), Image.SCALE_SMOOTH);
 
-        ImageIcon imageIcon = new ImageIcon(dimg);
-        label.setIcon(imageIcon);
+        // ImageIcon imageIcon = new ImageIcon(dimg);
+        // label.setIcon(imageIcon);
 
-        menu.add(label, BorderLayout.CENTER);
+        // menu.add(label, BorderLayout.CENTER);
         entrar = new JButton("Entrar");
         menu.add(entrar, BorderLayout.SOUTH);
         cards.add(menu, "Menu");
