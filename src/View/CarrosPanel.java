@@ -47,9 +47,7 @@ public class CarrosPanel extends JPanel {
     // Construtor
     public CarrosPanel() {
         super();
-
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS)); // Definindo layout do CarrosPanel
-
         // --------------------------*
         // Componentes
         cadastraCarro = new JButton("Cadastrar");

@@ -106,7 +106,7 @@ public class ClientesPanel extends JPanel {
         // --------------------------*
         ClientesControl control = new ClientesControl(clientes, tableModel, table); // Objeto da classe carrosControl
 
-        // Cadastrar um carro:
+        // Cadastrar um cliente:
         cadastraCliente.addActionListener(e -> {
 
             if (!inputCpf.getText().isEmpty() && !inputNome.getText().isEmpty()
@@ -130,7 +130,7 @@ public class ClientesPanel extends JPanel {
         });
         // --------------------------*
 
-        // Editar um carro:
+        // Editar um cliente:
         editaCliente.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -145,7 +145,7 @@ public class ClientesPanel extends JPanel {
         });
         // --------------------------*
 
-        // Apagar um carro:
+        // Apagar um cliente:
         apagaCliente.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
