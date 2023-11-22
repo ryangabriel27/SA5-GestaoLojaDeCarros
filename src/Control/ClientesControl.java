@@ -57,12 +57,13 @@ public class ClientesControl {
         new ClientesDAO().apagar(cpf);
         // Chama o método de exclusão no banco de dados
         atualizarTabela(); // Atualiza a tabela de exibição após a exclusão
-        JOptionPane.showMessageDialog(table, "Cliente removido!!!");
+        JOptionPane.showMessageDialog(table, "Cliente removido!", null , JOptionPane.ERROR_MESSAGE);
     }
 
     public void atualizar(String cpf, String nomeCompleto, String dataNascimento, String idade) {
         new ClientesDAO().atualizar(cpf, nomeCompleto, dataNascimento, idade);
         // Chama o método de atualização no banco de dados
+        JOptionPane.showMessageDialog(null, "Cliente atualizado", null, JOptionPane.INFORMATION_MESSAGE);
         atualizarTabela(); // Atualiza a tabela de exibição após a atualização
     }
 

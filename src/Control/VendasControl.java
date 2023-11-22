@@ -61,7 +61,6 @@ public class VendasControl {
 
     public void atualizar(String cliente, String carro, String valor, String data) {
         new VendasDAO().atualizar(cliente, carro, valor, data);
-        ;
         // Chama o método de atualização no banco de dados
         atualizarTabela(); // Atualiza a tabela de exibição após a atualização
     }

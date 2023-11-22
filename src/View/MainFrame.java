@@ -2,25 +2,14 @@ package View;
 
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
-import java.awt.Color;
-import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
 
-import javax.imageio.ImageIO;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
-
-import Model.Carros;
 
 public class MainFrame extends JFrame {
     BufferedImage img = null;
@@ -38,16 +27,17 @@ public class MainFrame extends JFrame {
         menu = new JPanel(new BorderLayout());
 
         // try {
-        //     img = ImageIO.read(new File("menu.jpg"));
+        // img = ImageIO.read(new File("menu.jpg"));
         // } catch (IOException e) {
-        //     e.printStackTrace();
+        // e.printStackTrace();
         // }
         // JLabel label = new JLabel();
         // label.setText("teste");
         // label.setForeground(Color.white);
         // label.setHorizontalTextPosition(JLabel.CENTER);
 
-        // Image dimg = img.getScaledInstance(this.getWidth(), this.getHeight(), Image.SCALE_SMOOTH);
+        // Image dimg = img.getScaledInstance(this.getWidth(), this.getHeight(),
+        // Image.SCALE_SMOOTH);
 
         // ImageIcon imageIcon = new ImageIcon(dimg);
         // label.setIcon(imageIcon);

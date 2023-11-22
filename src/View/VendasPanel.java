@@ -16,7 +16,6 @@ import Control.ClientesDAO;
 import Control.VendasControl;
 import Control.VendasDAO;
 
-import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -25,7 +24,6 @@ import java.awt.event.FocusEvent;
 import java.awt.event.MouseAdapter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Vector;
 
 import Model.Carros;
 import Model.Clientes;
@@ -38,7 +36,6 @@ public class VendasPanel extends JPanel {
     private List<Vendas> vendas = new ArrayList<>();
     private List<Carros> carros;
     private List<Clientes> clientes;
-    private JPanel mainPanel;
     private JComboBox<String> clientesComboBox, carrosComboBox;
     private JButton realizarVenda, apagarVenda;
     private JTextField inputData, inputValor;

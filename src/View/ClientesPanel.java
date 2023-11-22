@@ -4,7 +4,6 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,11 +17,8 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 
-import Control.CarrosControl;
-import Control.CarrosDAO;
 import Control.ClientesControl;
 import Control.ClientesDAO;
-import Model.Carros;
 import Model.Clientes;
 
 public class ClientesPanel extends JPanel {
@@ -109,13 +105,12 @@ public class ClientesPanel extends JPanel {
 
         // Cadastrar um cliente:
         cadastraCliente.addActionListener(e -> {
-            try {
-                if (!inputCpf.getText().isEmpty() && !inputNome.getText().isEmpty()
+            if (!inputCpf.getText().isEmpty() && !inputNome.getText().isEmpty()
                     && !inputDataNascimento.getText().isEmpty()
                     && !inputIdade.getText().isEmpty()) {
 
-                if (!control.validaCpf(inputCpf.getText()) && !control.validaIdade(inputIdade.getText())
-                        && !control.validarData(inputDataNascimento.getText())) {
+                if (control.validaCpf(inputCpf.getText().trim()) && control.validaIdade(inputIdade.getText().trim())
+                        && control.validarData(inputDataNascimento.getText().trim())) {
 
                     control.cadastrarCliente(inputCpf.getText(), inputNome.getText(), inputDataNascimento.getText(),
                             inputIdade.getText());
@@ -128,19 +123,15 @@ public class ClientesPanel extends JPanel {
 
                 } else {
                     JOptionPane.showMessageDialog(inputPanel,
-                        "Preencha os campos corretamente para cadastrar um cliente!!", null , JOptionPane.WARNING_MESSAGE);
+                            "Preencha os campos corretamente para cadastrar um cliente!!", null,
+                            JOptionPane.WARNING_MESSAGE);
                 }
 
             } else {
                 JOptionPane.showMessageDialog(inputPanel,
-                        "Preencha os campos corretamente para cadastrar um cliente!!", null , JOptionPane.WARNING_MESSAGE);
+                        "Preencha os campos corretamente para cadastrar um cliente!!", null,
+                        JOptionPane.WARNING_MESSAGE);
             }
-            } catch (Exception err){
-                JOptionPane.showMessageDialog(inputPanel,
-                        "Preencha os campos corretamente para cadastrar um cliente!!");
-                System.out.println(err.getMessage());
-            }
-            
 
         });
         // --------------------------*
@@ -164,14 +155,19 @@ public class ClientesPanel extends JPanel {
         apagaCliente.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // Chama o método "apagar" do objeto operacoes com o valor do campo de entrada
-                // "placa"
-                control.apagar(inputCpf.getText());
-                // Limpa os campos de entrada após a operação de exclusão
-                inputCpf.setText("");
-                inputNome.setText("");
-                inputDataNascimento.setText("");
-                inputIdade.setText("");
+                int res = JOptionPane.showConfirmDialog(null, "Deseja excluir este cliente?",
+                        "Excluir", JOptionPane.YES_NO_OPTION);
+                if (res == JOptionPane.YES_OPTION) {
+                    // Chama o método "apagar" do objeto operacoes com o valor do campo de entrada
+                    // "placa"
+                    control.apagar(inputCpf.getText());
+                    // Limpa os campos de entrada após a operação de exclusão
+                    inputCpf.setText("");
+                    inputNome.setText("");
+                    inputDataNascimento.setText("");
+                    inputIdade.setText("");
+                }
+
             }
         });
     }

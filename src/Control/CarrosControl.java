@@ -58,12 +58,13 @@ public class CarrosControl {
         new CarrosDAO().apagar(placa);
         // Chama o método de exclusão no banco de dados
         atualizarTabela(); // Atualiza a tabela de exibição após a exclusão
-        JOptionPane.showMessageDialog(table, "Carro removido!!!");
+        JOptionPane.showMessageDialog(table, "Carro removido!", null, JOptionPane.ERROR_MESSAGE);
     }
 
     public void atualizar(String modelo, String marca, String ano, String cor, String placa, String valor) {
         new CarrosDAO().atualizar(marca, modelo, ano, cor, placa, valor);
         // Chama o método de atualização no banco de dados
+        JOptionPane.showMessageDialog(null, "Carro atualizado!", null, JOptionPane.INFORMATION_MESSAGE);
         atualizarTabela(); // Atualiza a tabela de exibição após a atualização
     }
 

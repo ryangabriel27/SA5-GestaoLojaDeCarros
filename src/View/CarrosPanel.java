@@ -13,21 +13,13 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 
-import org.w3c.dom.events.MouseEvent;
-
 import Control.CarrosControl;
 import Control.CarrosDAO;
 
-import java.awt.BorderLayout;
-import java.awt.CardLayout;
-import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
 import java.awt.event.MouseAdapter;
-import java.awt.event.WindowEvent;
 
 import Model.Carros;
 
@@ -41,8 +33,6 @@ public class CarrosPanel extends JPanel {
     private List<Carros> carros = new ArrayList<>();
     private int linhaSelecionada = -1;
     private JScrollPane jSPane;
-    private boolean isAnoNumeric;
-    private boolean isValorNumeric;
 
     // Construtor
     public CarrosPanel() {
