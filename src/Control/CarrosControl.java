@@ -39,10 +39,10 @@ public class CarrosControl {
 
     }
 
-    public void cadastrarCarro(String modelo, String marca, String ano, String cor, String placa, double valor) {
+    public void cadastrarCarro(String modelo, String marca, String ano, String cor, String placa, String valor) {
         // Adiciona a tabela
         Carros carro = new Carros(modelo.trim().toUpperCase(), marca.trim().toUpperCase(), ano.trim(),
-                cor.trim().toUpperCase(), placa.trim().toUpperCase(), valor);
+                cor.trim().toUpperCase(), placa.trim().toUpperCase(), valor.trim());
         carros.add(carro);
         // -----------------------*
         // Adicionar ao banco de dados
@@ -61,7 +61,7 @@ public class CarrosControl {
         JOptionPane.showMessageDialog(table, "Carro removido!!!");
     }
 
-    public void atualizar(String modelo, String marca, String ano, String cor, String placa, double valor) {
+    public void atualizar(String modelo, String marca, String ano, String cor, String placa, String valor) {
         new CarrosDAO().atualizar(marca, modelo, ano, cor, placa, valor);
         // Chama o método de atualização no banco de dados
         atualizarTabela(); // Atualiza a tabela de exibição após a atualização
@@ -70,10 +70,26 @@ public class CarrosControl {
     public boolean placaJaCadastrada(String placa) {
         for (Carros carro : carros) {
             if (carro.getPlaca().equalsIgnoreCase(placa)) {
-                return true;
+                return false;
             }
         }
-        return false;
+        return true;
     }
-    
+
+    public boolean validarValor(String valor) {
+        if (valor.matches("[0-9]+")) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public boolean validarAno(String ano) {
+        if (ano.matches("[0-9]+") && ano.length() == 4) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
 }

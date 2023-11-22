@@ -4,6 +4,7 @@ import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -19,6 +20,9 @@ import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
+import java.awt.event.MouseAdapter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
@@ -36,9 +40,10 @@ public class VendasPanel extends JPanel {
     private List<Clientes> clientes;
     private JPanel mainPanel;
     private JComboBox<String> clientesComboBox, carrosComboBox;
-    private JButton realizarVenda;
+    private JButton realizarVenda, apagarVenda;
     private JTextField inputData, inputValor;
     private JScrollPane jSPane;
+    private String clienteVenda, carroVenda;
 
     public VendasPanel() {
         super();
@@ -51,6 +56,7 @@ public class VendasPanel extends JPanel {
         inputData = new JTextField(10);
         inputValor = new JTextField(10);
         realizarVenda = new JButton("Realizar venda");
+        apagarVenda = new JButton("Cancela venda");
         // ---------------------*
 
         carrosComboBox.addItem("Selecione um carro");
@@ -82,13 +88,14 @@ public class VendasPanel extends JPanel {
         // --------------------------*
         JPanel buttonPanel = new JPanel(); // Painel de botões
         buttonPanel.add(realizarVenda);
+        buttonPanel.add(apagarVenda);
         add(buttonPanel);// Adicionando o painel De botões a Tela Principal
 
         // --------------------------*
         jSPane = new JScrollPane(); // Criando um scrollPane
         add(jSPane);
         tableModel = new DefaultTableModel(new Object[][] {},
-                new String[] { "Carro", "Cliente", "Data", "Valor" });
+                new String[] { "Cliente", "Carro", "Data", "Valor" });
         table = new JTable(tableModel);
         jSPane.setViewportView(table);
         // Cria o banco de dados caso não tenha sido criado
@@ -97,17 +104,75 @@ public class VendasPanel extends JPanel {
         atualizarTabela();
         // ---------------------*
         // Tratamento de eventos:
-        VendasControl control = new VendasControl(clientes, tableModel, table);
+        VendasControl control = new VendasControl(vendas, tableModel, table);
         realizarVenda.addActionListener(new ActionListener() {
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                String carro = (String) carrosComboBox.getSelectedItem();
-                String cliente = (String) clientesComboBox.getSelectedItem();
-                if (!carro.equals("Selecione um carro") && !cliente.equals("Selecione um cliente")) {
-                    control.cadastrarVenda(cliente, carro, inputValor.getText() inputData.getText());
+                String carro = String.valueOf(carrosComboBox.getSelectedItem());
+                String cliente = String.valueOf(clientesComboBox.getSelectedItem());
+                if (!carro.equals("Selecione um carro") && !cliente.equals("Selecione um cliente")
+                        && !inputData.getText().isEmpty() && !inputValor.getText().isEmpty()) {
+                    if (control.validarData(inputData.getText()) && control.validarValor(inputValor.getText())) {
+                        control.cadastrarVenda(cliente, carro, inputValor.getText(), inputData.getText());
+                        inputData.setText("");
+                        inputValor.setText("");
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Preencha os campos corretamente!", "ERRO!",
+                                JOptionPane.WARNING_MESSAGE);
+                    }
+
+                } else {
+                    JOptionPane.showMessageDialog(null, "Preencha os campos corretamente!", "ERRO!",
+                            JOptionPane.WARNING_MESSAGE);
                 }
 
+            }
+
+        });
+
+        clientesComboBox.addFocusListener(new FocusAdapter() {
+
+            @Override
+            public void focusGained(FocusEvent e) {
+                atualizaComboBoxClientes();
+            }
+
+        });
+        carrosComboBox.addFocusListener(new FocusAdapter() {
+
+            @Override
+            public void focusGained(FocusEvent e) {
+                atualizaComboBoxCarros();
+            }
+
+        });
+
+        table.addMouseListener(new MouseAdapter() {
+
+            @Override
+            public void mouseClicked(java.awt.event.MouseEvent e) {
+
+                linhaSelecionada = table.rowAtPoint(e.getPoint());
+                if (linhaSelecionada != -1) {
+                    carroVenda = (String) table.getValueAt(linhaSelecionada, 2);
+                    clienteVenda = (String) table.getValueAt(linhaSelecionada, 1);
+                }
+
+            }
+
+        });
+
+        apagarVenda.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int res = JOptionPane.showConfirmDialog(null, "Deseja cancelar esta venda?",
+                        "Cancelar venda", JOptionPane.YES_NO_OPTION);
+
+                if (res == JOptionPane.YES_OPTION) {
+                    control.apagar(carroVenda);
+                }
             }
 
         });

@@ -1,5 +1,8 @@
 package Control;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.List;
 
 import javax.swing.JOptionPane;
@@ -63,4 +66,28 @@ public class ClientesControl {
         atualizarTabela(); // Atualiza a tabela de exibição após a atualização
     }
 
+    public boolean validaCpf(String cpf) {
+        if (cpf.matches("[0-9]+")) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    public boolean validaIdade(String idade) {
+        if (idade.matches("[0-9]+")) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public boolean validarData(String date) { // Verifica se a data digitada segue o formato 'dd/mm/yyyy'
+        try {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+            LocalDate d = LocalDate.parse(date, formatter);
+            return true;
+        } catch (DateTimeParseException e) {
+            return false;
+        }
+    }
 }

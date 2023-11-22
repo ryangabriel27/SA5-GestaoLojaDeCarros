@@ -62,7 +62,7 @@ public class CarrosDAO {
                         rs.getString("ano"),
                         rs.getString("cor"),
                         rs.getString("placa"),
-                        rs.getDouble("valor"));
+                        rs.getString("valor"));
                 carros.add(carro); // Adiciona o objeto Carros à lista de carros
             }
         } catch (SQLException ex) {
@@ -87,7 +87,7 @@ public class CarrosDAO {
         }
     }
 
-    public void cadastrar(String marca, String modelo, String ano, String cor, String placa, double valor) {
+    public void cadastrar(String marca, String modelo, String ano, String cor, String placa, String valor) {
         PreparedStatement stmt = null;
         // Define a instrução SQL parametrizada para cadastrar na tabela
         String sql = "INSERT INTO carros_lojacarros (marca, modelo, ano, cor, placa, valor)VALUES (?, ?, ?, ?, ?, ?)";
@@ -97,8 +97,8 @@ public class CarrosDAO {
             stmt.setString(2, modelo.toUpperCase().trim());
             stmt.setString(3, ano.trim());
             stmt.setString(4, cor.toUpperCase().trim());
-            stmt.setString(5, placa.trim());
-            stmt.setDouble(6, valor);
+            stmt.setString(5, placa.trim().toUpperCase());
+            stmt.setString(6, valor.trim());
             stmt.executeUpdate();
             System.out.println("Dados inseridos com sucesso");
         } catch (SQLException e) {
@@ -109,7 +109,7 @@ public class CarrosDAO {
     } 
 
     // Atualizar dados no banco
-    public void atualizar(String marca, String modelo, String ano, String cor, String placa, double valor) {
+    public void atualizar(String marca, String modelo, String ano, String cor, String placa, String valor) {
         PreparedStatement stmt = null;
         // Define a instrução SQL parametrizada para atualizar dados pela placa
         String sql = "UPDATE carros_lojacarros SET marca = ?, modelo = ?, ano = ?, cor = ?, valor = ? WHERE placa = ?";
@@ -119,7 +119,7 @@ public class CarrosDAO {
             stmt.setString(2, modelo.toUpperCase().trim());
             stmt.setString(3, ano.trim());
             stmt.setString(4, cor.toUpperCase().trim());
-            stmt.setDouble(5, valor);
+            stmt.setString(5, valor.trim());
             // placa é chave primaria não pode ser alterada.
             stmt.setString(6, placa);
             stmt.executeUpdate();

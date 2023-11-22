@@ -1,12 +1,14 @@
 package Control;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.List;
 
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
-import Model.Clientes;
 import Model.Vendas;
 
 public class VendasControl {
@@ -16,7 +18,7 @@ public class VendasControl {
     private JTable table;
 
     // Construtor
-    public VendasControl(List<Clientes> clientes, DefaultTableModel tableModel, JTable table) {
+    public VendasControl(List<Vendas> vendas, DefaultTableModel tableModel, JTable table) {
         this.vendas = vendas;
         this.tableModel = tableModel;
         this.table = table;
@@ -45,7 +47,7 @@ public class VendasControl {
         new VendasDAO().cadastrar(cliente, carro, valor, data);
         // -----------------------*
         atualizarTabela();// Atualiza a tabela
-        JOptionPane.showMessageDialog(null, "Cliente cadastrado com sucesso!");
+        JOptionPane.showMessageDialog(null, "Venda feita com sucesso!");
         // Atualiza o banco de dados
     }
 
@@ -54,12 +56,31 @@ public class VendasControl {
         new VendasDAO().apagar(carro);
         // Chama o método de exclusão no banco de dados
         atualizarTabela(); // Atualiza a tabela de exibição após a exclusão
-        JOptionPane.showMessageDialog(table, "Cliente removido!!!");
+        JOptionPane.showMessageDialog(table, "Venda cancelada!", null, JOptionPane.ERROR_MESSAGE);
     }
 
     public void atualizar(String cliente, String carro, String valor, String data) {
-        new VendasDAO().atualizar(cliente, carro, valor, data);;
+        new VendasDAO().atualizar(cliente, carro, valor, data);
+        ;
         // Chama o método de atualização no banco de dados
         atualizarTabela(); // Atualiza a tabela de exibição após a atualização
+    }
+
+    public boolean validarData(String date) { // Verifica se a data digitada segue o formato 'dd/mm/yyyy'
+        try {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+            LocalDate d = LocalDate.parse(date, formatter);
+            return true;
+        } catch (DateTimeParseException e) {
+            return false;
+        }
+    }
+
+    public boolean validarValor(String valor){
+        if (valor.matches("[0-9]+")){
+            return true;
+        } else {
+            return false;
+        }
     }
 }

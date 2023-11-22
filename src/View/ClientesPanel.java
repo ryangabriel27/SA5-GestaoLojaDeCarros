@@ -4,6 +4,7 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -108,24 +109,38 @@ public class ClientesPanel extends JPanel {
 
         // Cadastrar um cliente:
         cadastraCliente.addActionListener(e -> {
-
-            if (!inputCpf.getText().isEmpty() && !inputNome.getText().isEmpty()
+            try {
+                if (!inputCpf.getText().isEmpty() && !inputNome.getText().isEmpty()
                     && !inputDataNascimento.getText().isEmpty()
                     && !inputIdade.getText().isEmpty()) {
 
-                control.cadastrarCliente(inputCpf.getText(), inputNome.getText(), inputDataNascimento.getText(),
-                        inputIdade.getText());
+                if (!control.validaCpf(inputCpf.getText()) && !control.validaIdade(inputIdade.getText())
+                        && !control.validarData(inputDataNascimento.getText())) {
 
-                // Limpa os campos de entrada após a operação de cadastro
-                inputCpf.setText("");
-                inputNome.setText("");
-                inputDataNascimento.setText("");
-                inputIdade.setText("");
+                    control.cadastrarCliente(inputCpf.getText(), inputNome.getText(), inputDataNascimento.getText(),
+                            inputIdade.getText());
+
+                    // Limpa os campos de entrada após a operação de cadastro
+                    inputCpf.setText("");
+                    inputNome.setText("");
+                    inputDataNascimento.setText("");
+                    inputIdade.setText("");
+
+                } else {
+                    JOptionPane.showMessageDialog(inputPanel,
+                        "Preencha os campos corretamente para cadastrar um cliente!!", null , JOptionPane.WARNING_MESSAGE);
+                }
 
             } else {
                 JOptionPane.showMessageDialog(inputPanel,
-                        "Preencha os campos corretamente para cadastrar um cliente!!");
+                        "Preencha os campos corretamente para cadastrar um cliente!!", null , JOptionPane.WARNING_MESSAGE);
             }
+            } catch (Exception err){
+                JOptionPane.showMessageDialog(inputPanel,
+                        "Preencha os campos corretamente para cadastrar um cliente!!");
+                System.out.println(err.getMessage());
+            }
+            
 
         });
         // --------------------------*
