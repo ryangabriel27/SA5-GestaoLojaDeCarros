@@ -67,15 +67,15 @@ public class ClientesControl {
         atualizarTabela(); // Atualiza a tabela de exibição após a atualização
     }
 
-    public boolean validaCpf(String cpf) {
+    public boolean validaCpf(String cpf) { // Verifica o texto digitado no inputCpf (apenas dígitos e tamanho igual a 11 'ex: 12345678910')
         if (cpf.matches("[0-9]+") && cpf.length() == 11) {
             return true;
         } else {
             return false;
         }
     }
-    public boolean validaIdade(String idade) {
-        if (idade.matches("[0-9]+")) {
+    public boolean validaIdade(String idade) { // Verifica o texto digitado no inputIdade (apenas dígitos e número maior que 0)
+        if (idade.matches("[0-9]+") && Integer.parseInt(idade) > 0) {
             return true;
         } else {
             return false;

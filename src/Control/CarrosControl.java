@@ -65,7 +65,7 @@ public class CarrosControl {
         atualizarTabela(); // Atualiza a tabela de exibição após a atualização
     }
 
-    public boolean placaJaCadastrada(String placa) {
+    public boolean placaJaCadastrada(String placa) { // Verifica se a placa ja não foi cadastrada
         for (Carros carro : carros) {
             if (carro.getPlaca().equalsIgnoreCase(placa)) {
                 return false;
@@ -74,7 +74,7 @@ public class CarrosControl {
         return true;
     }
 
-    public boolean validarValor(String valor) {
+    public boolean validarValor(String valor) { // Verifica o texto digitado no inputValor *(apenas dígitos e número maior que 0)*
         if (valor.matches("[0-9]+") && Integer.parseInt(valor) > 0) {
             return true;
         } else {
@@ -82,7 +82,7 @@ public class CarrosControl {
         }
     }
 
-    public boolean validarAno(String ano) {
+    public boolean validarAno(String ano) { // Verfica o texto digitado no inputAno *(apenas dígitos e tamanho igual a 4 'ex: 2023')*
         if (ano.matches("[0-9]+") && ano.length() == 4) {
             return true;
         } else {

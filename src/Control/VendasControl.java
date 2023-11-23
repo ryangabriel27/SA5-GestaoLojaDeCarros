@@ -75,7 +75,8 @@ public class VendasControl {
         }
     }
 
-    public boolean validarValor(String valor) {
+    public boolean validarValor(String valor) { // Verifica o texto digitado no inputValor *(apenas dígitos e número
+                                                // maior que 0)*
         if (valor.matches("[0-9]+") && Integer.parseInt(valor) > 0) {
             return true;
         } else {
