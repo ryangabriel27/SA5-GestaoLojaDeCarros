@@ -75,7 +75,7 @@ public class CarrosControl {
     }
 
     public boolean validarValor(String valor) {
-        if (valor.matches("[0-9]+")) {
+        if (valor.matches("[0-9]+") && Integer.parseInt(valor) > 0) {
             return true;
         } else {
             return false;

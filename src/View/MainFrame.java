@@ -4,15 +4,22 @@ import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
+import java.io.File;
 
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 
 public class MainFrame extends JFrame {
-    BufferedImage img = null;
+    private JLabel img;
     private JPanel panel, cards, menu, app;
     private JButton entrar, sair;
 
@@ -25,24 +32,10 @@ public class MainFrame extends JFrame {
         cards.setLayout(cl);
         // ---------------------*
         menu = new JPanel(new BorderLayout());
-
-        // try {
-        // img = ImageIO.read(new File("menu.jpg"));
-        // } catch (IOException e) {
-        // e.printStackTrace();
-        // }
-        // JLabel label = new JLabel();
-        // label.setText("teste");
-        // label.setForeground(Color.white);
-        // label.setHorizontalTextPosition(JLabel.CENTER);
-
-        // Image dimg = img.getScaledInstance(this.getWidth(), this.getHeight(),
-        // Image.SCALE_SMOOTH);
-
-        // ImageIcon imageIcon = new ImageIcon(dimg);
-        // label.setIcon(imageIcon);
-
-        // menu.add(label, BorderLayout.CENTER);
+        img = new JLabel();
+        ImageIcon iconMenu = new ImageIcon(getClass().getResource("imgs/menu.jpg"));
+        img.setIcon(iconMenu);
+        menu.add(img);
         entrar = new JButton("Entrar");
         menu.add(entrar, BorderLayout.SOUTH);
         cards.add(menu, "Menu");
@@ -68,6 +61,7 @@ public class MainFrame extends JFrame {
         entrar.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                JOptionPane.showMessageDialog(null, "Bem-Vindo :)", null, JOptionPane.INFORMATION_MESSAGE);
                 cl.show(cards, "App");
             }
         });
@@ -75,10 +69,23 @@ public class MainFrame extends JFrame {
         sair.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                cl.show(cards, "Menu");
+                int res = JOptionPane.showConfirmDialog(null, "Deseja realmente sair?",
+                        "Editar", JOptionPane.YES_NO_OPTION);
+                if (res == JOptionPane.YES_OPTION) {
+                    cl.show(cards, "Menu");
+                }
             }
         });
         // ---------------------*
+        addWindowListener(new WindowAdapter() {
+
+            @Override
+            public void windowClosed(WindowEvent e) {
+                // TODO Auto-generated method stub
+                super.windowClosed(e);
+            }
+            
+        });
     }
 
     public void run() {

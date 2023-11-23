@@ -75,8 +75,8 @@ public class VendasControl {
         }
     }
 
-    public boolean validarValor(String valor){
-        if (valor.matches("[0-9]+")){
+    public boolean validarValor(String valor) {
+        if (valor.matches("[0-9]+") && Integer.parseInt(valor) > 0) {
             return true;
         } else {
             return false;

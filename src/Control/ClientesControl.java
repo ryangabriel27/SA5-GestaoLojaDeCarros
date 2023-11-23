@@ -68,7 +68,7 @@ public class ClientesControl {
     }
 
     public boolean validaCpf(String cpf) {
-        if (cpf.matches("[0-9]+")) {
+        if (cpf.matches("[0-9]+") && cpf.length() == 11) {
             return true;
         } else {
             return false;

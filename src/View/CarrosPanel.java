@@ -16,6 +16,8 @@ import javax.swing.table.DefaultTableModel;
 import Control.CarrosControl;
 import Control.CarrosDAO;
 
+import java.awt.Color;
+import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -51,6 +53,9 @@ public class CarrosPanel extends JPanel {
         inputValor = new JTextField(12);
 
         // --------------------------*
+        JPanel title = new JPanel(new FlowLayout());
+        title.add(new JLabel("Cadastro de carros"));
+        add(title);
         // Adicionar os componentes:
         JPanel inputPanel = new JPanel(new GridLayout(6, 2, 2, 4)); // InputPanel
         inputPanel.add(new JLabel("Digite a placa do carro:"));
@@ -85,7 +90,14 @@ public class CarrosPanel extends JPanel {
         new CarrosDAO().criaTabela();
         // incluindo elementos do banco na criação do painel
         atualizarTabela();
-
+        // --------------------------*
+        // Estilização:
+        apagaCarro.setBackground(new Color(168, 3, 3));
+        apagaCarro.setForeground(new Color(255, 255, 255));
+        cadastraCarro.setBackground(new Color(46, 128, 32));
+        cadastraCarro.setForeground(new Color(255, 255, 255));
+        editaCarro.setBackground(new Color(109, 110, 109));
+        editaCarro.setForeground(new Color(255, 255, 255));
         // --------------------------*
         // Tratamento de eventos
         table.addMouseListener(new MouseAdapter() {
@@ -111,33 +123,41 @@ public class CarrosPanel extends JPanel {
 
         // Cadastrar um carro:
         cadastraCarro.addActionListener(e -> {
+            try {
+                if (!inputMarca.getText().isEmpty() && !inputModelo.getText().isEmpty()
+                        && !inputPlaca.getText().isEmpty()
+                        && !inputAno.getText().isEmpty() && !inputCor.getText().isEmpty()
+                        && !inputValor.getText().isEmpty()) {
 
-            if (!inputMarca.getText().isEmpty() && !inputModelo.getText().isEmpty() && !inputPlaca.getText().isEmpty()
-                    && !inputAno.getText().isEmpty() && !inputCor.getText().isEmpty()
-                    && !inputValor.getText().isEmpty()) {
+                    if (controllerCarros.validarAno(inputAno.getText())
+                            && controllerCarros.placaJaCadastrada(inputPlaca.getText())
+                            && controllerCarros.validarValor(inputValor.getText())) {
+                        // Se a placa não estiver cadastrada, realiza o cadastro
+                        controllerCarros.cadastrarCarro(inputModelo.getText(), inputMarca.getText(), inputAno.getText(),
+                                inputCor.getText(), inputPlaca.getText(), inputValor.getText());
 
-                if (controllerCarros.validarAno(inputAno.getText())
-                        && controllerCarros.placaJaCadastrada(inputPlaca.getText())
-                        && controllerCarros.validarValor(inputValor.getText())) {
-                    // Se a placa não estiver cadastrada, realiza o cadastro
-                    controllerCarros.cadastrarCarro(inputModelo.getText(), inputMarca.getText(), inputAno.getText(),
-                            inputCor.getText(), inputPlaca.getText(), inputValor.getText());
+                        // Limpa os campos de entrada após a operação de cadastro
+                        inputMarca.setText("");
+                        inputAno.setText("");
+                        inputModelo.setText("");
+                        inputPlaca.setText("");
+                        inputValor.setText("");
+                        inputCor.setText("");
 
-                    // Limpa os campos de entrada após a operação de cadastro
-                    inputMarca.setText("");
-                    inputAno.setText("");
-                    inputModelo.setText("");
-                    inputPlaca.setText("");
-                    inputValor.setText("");
-                    inputCor.setText("");
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Preencha os campos corretamente e tente novamente!", null,
+                                JOptionPane.WARNING_MESSAGE);
+                    }
 
                 } else {
-                    JOptionPane.showMessageDialog(null, "Preencha os campos corretamente e tente novamente!", null,
-                            JOptionPane.WARNING_MESSAGE);
+                    JOptionPane.showMessageDialog(inputPanel,
+                            "Preencha os campos corretamente para cadastrar um carro!!");
                 }
-
-            } else {
-                JOptionPane.showMessageDialog(inputPanel, "Preencha os campos corretamente para cadastrar um carro!!");
+            } catch (Exception err) {
+                System.out.println(err.getMessage());
+                JOptionPane.showMessageDialog(null,
+                        "Verifique se os dados escritos estão corretos e tente novamente!", "ERRO!",
+                        JOptionPane.WARNING_MESSAGE);
             }
 
         });
@@ -148,16 +168,41 @@ public class CarrosPanel extends JPanel {
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (controllerCarros.validarAno(inputAno.getText())
-                        && controllerCarros.validarValor(inputValor.getText())) {
-                    // Chama o método "atualizar" do objeto operacoes com os valores dos campos de
-                    // entrada
-                    controllerCarros.atualizar(inputModelo.getText(), inputMarca.getText(), inputAno.getText(),
-                            inputCor.getText(), inputPlaca.getText(), inputValor.getText());
-                    // Limpa os campos de entrada após a operação de atualização
-                } else {
-                    JOptionPane.showMessageDialog(null, "Preencha os campos corretamente e tente novamente!", null,
-                            JOptionPane.WARNING_MESSAGE);
+                try {
+                    int res = JOptionPane.showConfirmDialog(null, "Deseja atualizar as informações deste carro?",
+                            "Editar", JOptionPane.YES_NO_OPTION);
+                    if (res == JOptionPane.YES_OPTION) {
+                        if (controllerCarros.validarAno(inputAno.getText())
+                                && controllerCarros.placaJaCadastrada(inputPlaca.getText())
+                                && controllerCarros.validarValor(inputValor.getText())) {
+                            if (controllerCarros.validarAno(inputAno.getText())
+                                    && controllerCarros.validarValor(inputValor.getText())) {
+                                // Chama o método "atualizar" do objeto operacoes com os valores dos campos de
+                                // entrada
+                                controllerCarros.atualizar(inputModelo.getText(), inputMarca.getText(),
+                                        inputAno.getText(),
+                                        inputCor.getText(), inputPlaca.getText(), inputValor.getText());
+                                // Limpa os campos de entrada após a operação de atualização
+                            } else {
+                                JOptionPane.showMessageDialog(null,
+                                        "Preencha os campos corretamente e tente novamente!",
+                                        null,
+                                        JOptionPane.WARNING_MESSAGE);
+                            }
+                        } else {
+                            JOptionPane.showMessageDialog(null, "Preencha os campos corretamente e tente novamente!",
+                                    null,
+                                    JOptionPane.WARNING_MESSAGE);
+                        }
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Preencha os campos corretamente e tente novamente!", null,
+                                JOptionPane.WARNING_MESSAGE);
+                    }
+                } catch (Exception err) {
+                    System.out.println(err.getMessage());
+                    JOptionPane.showMessageDialog(null,
+                            "Verifique se os dados escritos estão corretos e tente novamente!", "ERRO!",
+                            JOptionPane.ERROR_MESSAGE);
                 }
 
             }
