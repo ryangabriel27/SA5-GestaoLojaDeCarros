@@ -106,6 +106,8 @@ public class VendasPanel extends JPanel {
 
             @Override
             public void actionPerformed(ActionEvent e) {
+                try {
+
                 String carro = String.valueOf(carrosComboBox.getSelectedItem());
                 String cliente = String.valueOf(clientesComboBox.getSelectedItem());
                 if (!carro.equals("Selecione um carro") && !cliente.equals("Selecione um cliente")
@@ -123,6 +125,11 @@ public class VendasPanel extends JPanel {
                     JOptionPane.showMessageDialog(null, "Preencha os campos corretamente!", "ERRO!",
                             JOptionPane.WARNING_MESSAGE);
                 }
+            } catch (Exception err){
+                System.out.println(err.getMessage());
+                JOptionPane.showMessageDialog(null, "Verifique se os dados escritos estão corretos e tente novamente!", "ERRO!",
+                            JOptionPane.WARNING_MESSAGE);
+            }
 
             }
 

@@ -1,14 +1,11 @@
 package Control;
 
-import java.awt.JobAttributes;
-import java.sql.Connection;
 import java.util.List;
 
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
-import Connection.ConnectionFactory;
 import Model.Carros;
 import Control.CarrosDAO;
 
